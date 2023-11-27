@@ -3,9 +3,32 @@ import sys
 import time
 import string
 import random
+import sqlite3
 
 global username
 global starterWeapon
+
+eql = sqlite3.connect('data.db')
+
+eq = eql.cursor()
+
+# eq.execute("""CREATE TABLE users (
+# user text,
+# cash int,
+# level int, 
+# xp int,
+# gun1 text,
+# gun2 text,
+# gun3 text,
+# gun4 text,
+# potion1 text,
+# potion2 text,
+# potion3 text,
+# potion4 text
+# )""")
+
+# eql.commit()
+# eql.close()
 
 def main():
     # read info using sql
@@ -64,7 +87,11 @@ def starterWeaponChoice():
                 continue
 
 def intro():
-    global starterWeapon 
+    eq.execute(""" SELECT gun1 FROM users WHERE user = ?;""", (username,))
+    result = eq.fetchone()
+    if result:
+        print(result)
+
 
     if starterWeapon == 'N/A':
         input("Universal Studios Production")
@@ -78,6 +105,15 @@ def intro():
 
 
 def newSave():
+    eq.execute(""" SELECT user from users; """)
+    result = eq.fetchall()
+    x = 0
+    for i in result:
+        x = x + 1
+
+    if x == 3:
+        input("Too many saves!")
+        startUp()
     while True:
         try:
             username = str(input("Username: "))
@@ -93,6 +129,8 @@ def newSave():
             continue
         else:
             if confirmUsername == 1:
+                eq.execute(""" INSERT INTO users (user, cash, level, xp, gun1, gun2, gun3, gun4, potion1, potion2, potion3, potion4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); """, (username, 0, 0, 0, "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"))
+                eql.commit()
                 intro()
                 break
             elif confirmUsername == 2:
@@ -102,7 +140,62 @@ def newSave():
                 continue
 
 def loadSave():
-    print("WIP")
+    eq.execute(""" SELECT user from users; """)
+    result = eq.fetchall()
+    x = 0
+
+    for i in result:
+        x = x + 1
+
+    if x == 0:
+        input("There are no saves!")
+        startUp()
+    else:
+        while True:
+            try:
+                # print(result + "\n\n")
+                choice = int(input("(1) Load Save 1 | (2) Load Save 2 | (3) Load Save 3 | (4) Go Back"))
+            except:
+                continue
+            else:
+                if choice == 1:
+                    username = result[choice-1]
+                    input(username)
+                    break
+                elif choice == 2 and x > 1:
+                    username = result[choice-1]
+                    input(username)
+                    break
+                elif choice == 2 and x < 2:
+                    input("No data found")
+                    continue
+                elif choice == 3 and x > 2:
+                    username = result[choice-1]
+                    input(username)
+                    break
+                elif choice == 3 and x < 3:
+                    input("No data found")
+                else:
+                    startUp()
+
+def deleteSave():
+    input("| WARNING !!! | Entering dangeroust territory !!! | Proceed with caution |")
 
 
-newSave()
+def startUp():
+    while True:
+        try:
+            choice = int(input("(1) New Save | (2) Load Save | (3) Delete Save | (4) Exit\n\nChoice: "))
+        except:
+            continue
+        else:
+            if choice == 1:
+                newSave()
+            elif choice == 2:
+                loadSave()
+            elif choice ==3:
+                deleteSave()
+            else:
+                sys.exit()
+
+startUp()

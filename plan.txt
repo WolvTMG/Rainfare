@@ -1,0 +1,25 @@
+user = [
+user text
+cash int
+level int
+xp int
+]
+bag = [
+gun1
+gun2
+gun3
+gun4
+key1
+key2
+key3
+key4
+potion1 
+potion2
+potion3
+potion4
+]
+
+
+
+
+
