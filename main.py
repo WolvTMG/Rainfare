@@ -33,6 +33,19 @@ eq = eql.cursor()
 def main():
     # read info using sql
     def explore():
+        eq.execute(""" SELECT gun1, gun2, gun3, gun4 FROM users WHERE user = ?; """, (username))
+        result = eq.fetchall()
+        x = 0
+        print(result)
+        for i in result:
+            x = x + 1
+        input(x)
+        if x == 0:
+            input("You have no guns!")
+            menu()
+        else:
+            print("WIP")
+
         while True:
             try:
                 stopSearching = str(input("Currently exploring!\n\n[Press X to stop exploring]")).lower()
@@ -52,12 +65,23 @@ def main():
             sys.clear()
             print(f"Time elapsed: {i}")
 
+    def menu():
+        choice = int(input("(1) Explore | (2) View Bag | (3) Loot Crates | (4) Leave\n\nChoice: "))
+        if choice == 1:
+            explore()
+
+    menu()
+                     
+
 
 
 def starterWeaponChoice():
     while True:
         try:
             starterWeapon = int(input("Choose your starter weapon\n\n(1) AK47 | (2) AR-15 | (3) M1911\n\nChoice: "))
+        except:
+            continue
+        else:
             if starterWeapon == 1:
                 print("sql")
                 break
@@ -65,12 +89,11 @@ def starterWeaponChoice():
                 print("sql")
                 break
             elif starterWeapon == 3:
-                print("sql")
+                eq.execute("UPDATE users SET gun1 = 'M1911' WHERE user = ?;""", (username))
+                eql.commit()
                 break
             else:
                 continue
-        except:
-            continue
 
     while True:
         try:
@@ -89,18 +112,23 @@ def starterWeaponChoice():
 def intro():
     global username
 
-    eq.execute(""" SELECT gun1 FROM users WHERE user = ?;""", (username,))
+    eq.execute(""" SELECT gun1 FROM users WHERE user = ?;""", (username))
     result = eq.fetchone()
 
-    if result:
-        # input(f"Character Info:\n\nUsername: {username}\nHP: 100\nMain weapon: {starterWeapon}\nBag: {starterWeapon}")
-        main()
-    else:
+    input(result)
+
+    if result[0] == 'N/A':
         input("Universal Studios Production")
         input("Made by WolvTMG\n\n[Enter] to continue")
 
-        input(f"Welcome to Rainfare, {username}, choose your starter weapon")
+        input(f"Welcome to Rainfare, {username[0]}, choose your starter weapon")
         starterWeaponChoice()
+    else:
+        eq.execute(""" SELECT hp FROM users WHERE user = ?;""", (username))
+        hp = eq.fetchone()
+
+        input(f"Character Info:\n\nUsername: {username[0]}\nHP: {hp[0]}")
+        main()
 
 
 
@@ -181,12 +209,15 @@ def loadSave():
 
         while True:
             try: 
-                confirmChoice = int(input(f"Confirm choice: {username} ? (1) Yes | (2) No\n\nChoice: "))
+                confirmChoice = int(input(f"Confirm choice: {username[0]} (1) Yes | (2) No\n\nChoice: "))
             except:
                 continue
             else:
                 if confirmChoice == 1:
                     intro()
+                    break
+                elif confirmChoice ==2:
+                    loadSave()
                     break
                 else:
                     continue
