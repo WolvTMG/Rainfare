@@ -44,7 +44,16 @@ def main():
             input("You have no guns!")
             menu()
         else:
-            print("WIP")
+            while True:
+                try:
+                    choice = int(input("Choose gun\n\nChoice: "))
+                except:
+                    continue
+                else:
+                    if choice == 1:
+                        print(result[0][0])
+                        if result[0][0] != 'N/A':
+                            
 
         while True:
             try:
@@ -64,6 +73,9 @@ def main():
             time.sleep(1)
             sys.clear()
             print(f"Time elapsed: {i}")
+
+    def lootCrates():
+        print("WIP")
 
     def menu():
         choice = int(input("(1) Explore | (2) View Bag | (3) Loot Crates | (4) Leave\n\nChoice: "))
