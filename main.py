@@ -4,6 +4,7 @@ import time
 import string
 import random
 import sqlite3
+from threading import Thread
 
 global username
 
@@ -33,6 +34,8 @@ eq = eql.cursor()
 def main():
     # read info using sql
     def explore():
+        global searching
+        
         eq.execute(""" SELECT gun1, gun2, gun3, gun4 FROM users WHERE user = ?; """, (username))
         result = eq.fetchall()
         x = 0
@@ -54,33 +57,63 @@ def main():
                         print(result[0][0])
                         if result[0][0] != 'N/A':
                             
+                            timex = random.randrange(5, 15)
+                            print(timex)
 
-        while True:
-            try:
-                stopSearching = str(input("Currently exploring!\n\n[Press X to stop exploring]")).lower()
-            except:
-                continue
-            else:
-                if stopSearching == 'x':
-                    break
-                else:
-                    continue
+                            searching = False
 
-        time = random.randrange(5, 15)
-        print(time)
+                            def search():
+                                global searching
+                                while searching:
+                                    try:
+                                        stopSearching = str(input("Currently exploring!\n\n[Press X to stop exploring]")).lower()
+                                    except:
+                                        continue
+                                    else:
+                                        if stopSearching == 'x':
+                                            break
+                                        else:
+                                            continue
 
-        for i in time:
-            time.sleep(1)
-            sys.clear()
-            print(f"Time elapsed: {i}")
+                            sea = Thread(target=search)
+                            
+                            def loop():
+                                global searching
+                                for i in range(timex):
+                                    searching = True
+                                    time.sleep(1)
+                                    # os.system('clear')
+                                    # print(f"Time elapsed: {i}")
+                                searching = False
+
+                            loo = Thread(target=loop)
+
+                            sea.run()
+                            loo.run()
+
 
     def lootCrates():
         print("WIP")
 
     def menu():
-        choice = int(input("(1) Explore | (2) View Bag | (3) Loot Crates | (4) Leave\n\nChoice: "))
-        if choice == 1:
-            explore()
+        while True:
+            try:
+                choice = int(input("(1) Explore | (2) View Bag | (3) Loot Crates | (4) Leave\n\nChoice: "))
+            except:
+                continue
+            else:
+                if choice == 1:
+                    explore()
+                    break
+                elif choice == 2:
+                    print("WIP")
+                    continue
+                elif choice == 3:
+                    lootCrates()
+                elif choice == 4:
+                    sys.exit()
+                else:
+                    continue
 
     menu()
                      
