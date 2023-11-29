@@ -35,7 +35,7 @@ def main():
     # read info using sql
     def explore():
         global searching
-        
+
         eq.execute(""" SELECT gun1, gun2, gun3, gun4 FROM users WHERE user = ?; """, (username))
         result = eq.fetchall()
         x = 0
@@ -63,33 +63,32 @@ def main():
                             searching = False
 
                             def search():
-                                global searching
+                                print("search started")
                                 while searching:
-                                    try:
+                                    # try:
                                         stopSearching = str(input("Currently exploring!\n\n[Press X to stop exploring]")).lower()
-                                    except:
-                                        continue
-                                    else:
+                                    # except:
+                                        # continue
+                                    # else:
                                         if stopSearching == 'x':
                                             break
                                         else:
                                             continue
-
-                            sea = Thread(target=search)
                             
                             def loop():
                                 global searching
+                                searching = True    
                                 for i in range(timex):
-                                    searching = True
                                     time.sleep(1)
                                     # os.system('clear')
                                     # print(f"Time elapsed: {i}")
                                 searching = False
 
-                            loo = Thread(target=loop)
+                            loo = Thread(target=loop, daemon=True)
+                            sea = Thread(target=search, daemon=True)
 
-                            sea.run()
-                            loo.run()
+                            loo.start()
+                            sea.start()
 
 
     def lootCrates():
