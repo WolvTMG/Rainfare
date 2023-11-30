@@ -1,5 +1,6 @@
 user = [
 user text
+hp = int
 cash int
 level int
 xp int
@@ -17,6 +18,9 @@ potion1
 potion2
 potion3
 potion4
+rifleammo
+sniperammo
+pistolammo
 ]
 
 

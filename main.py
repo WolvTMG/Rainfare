@@ -1,40 +1,24 @@
 import os
 import sys
 import time
-import string
 import random
 import sqlite3
-from threading import Thread
 
 global username
 
 eql = sqlite3.connect('data.db')
-
 eq = eql.cursor()
 
-# eq.execute("""CREATE TABLE users (
-# user text,
-# hp int,
-# cash int,
-# level int, 
-# xp int,
-# gun1 text,
-# gun2 text,
-# gun3 text,
-# gun4 text,
-# potion1 text,
-# potion2 text,
-# potion3 text,
-# potion4 text
-# )""")
+# [[Rifles], [SMG], [Snipers], [HandGuns]]
+starterWeapons = [["AK-47", "AR-15"], ["M1911"]]
 
-# eql.commit()
-# eql.close()
+weaponsI = [["M16"], ["G17"]]
+weaponsII = [["Beretta M9"]]
+weaponsIII = [["AUG-A3"], ["Barrett"]]
 
 def main():
-    # read info using sql
+
     def explore():
-        global searching
 
         eq.execute(""" SELECT gun1, gun2, gun3, gun4 FROM users WHERE user = ?; """, (username))
         result = eq.fetchall()
@@ -42,7 +26,7 @@ def main():
         print(result)
         for i in result:
             x = x + 1
-        input(x)
+
         if x == 0:
             input("You have no guns!")
             menu()
@@ -54,42 +38,23 @@ def main():
                     continue
                 else:
                     if choice == 1:
+                        
                         print(result[0][0])
                         if result[0][0] != 'N/A':
                             
                             timex = random.randrange(5, 15)
                             print(timex)
 
-                            searching = False
+                            for i in range(timex):
+                                time.sleep(1)
+                                os.system('cls')
+                                print(f"Currently Exploring\n\nTime elapsed: {i}")
 
-                            def search():
-                                print("search started")
-                                while searching:
-                                    # try:
-                                        stopSearching = str(input("Currently exploring!\n\n[Press X to stop exploring]")).lower()
-                                    # except:
-                                        # continue
-                                    # else:
-                                        if stopSearching == 'x':
-                                            break
-                                        else:
-                                            continue
-                            
-                            def loop():
-                                global searching
-                                searching = True    
-                                for i in range(timex):
-                                    time.sleep(1)
-                                    # os.system('clear')
-                                    # print(f"Time elapsed: {i}")
-                                searching = False
+                            rewards()
+                            break
 
-                            loo = Thread(target=loop, daemon=True)
-                            sea = Thread(target=search, daemon=True)
-
-                            loo.start()
-                            sea.start()
-
+    def rewards():
+        print("WIP")
 
     def lootCrates():
         print("WIP")
@@ -102,6 +67,7 @@ def main():
                 continue
             else:
                 if choice == 1:
+                    os.system('cls')
                     explore()
                     break
                 elif choice == 2:
@@ -127,10 +93,12 @@ def starterWeaponChoice():
             continue
         else:
             if starterWeapon == 1:
-                print("sql")
+                eq.execute("UPDATE users SET gun1 = 'AK-47' WHERE user = ?;""", (username))
+                eql.commit()
                 break
             elif starterWeapon == 2:
-                print("sql")
+                eq.execute("UPDATE users SET gun1 = 'AR-15' WHERE user = ?;""", (username))
+                eql.commit()
                 break
             elif starterWeapon == 3:
                 eq.execute("UPDATE users SET gun1 = 'M1911' WHERE user = ?;""", (username))
@@ -146,9 +114,11 @@ def starterWeaponChoice():
             continue
         else:
             if confirmWeapon == 1:
+                os.system('cls')
                 intro()
                 break
             elif confirmWeapon == 2:
+                os.system('cls')
                 starterWeaponChoice()
             else:
                 continue
@@ -166,12 +136,14 @@ def intro():
         input("Made by WolvTMG\n\n[Enter] to continue")
 
         input(f"Welcome to Rainfare, {username[0]}, choose your starter weapon")
+        os.system('cls')
         starterWeaponChoice()
     else:
         eq.execute(""" SELECT hp FROM users WHERE user = ?;""", (username))
         hp = eq.fetchone()
 
         input(f"Character Info:\n\nUsername: {username[0]}\nHP: {hp[0]}")
+        os.system('cls')
         main()
 
 
@@ -204,9 +176,11 @@ def newSave():
             if confirmUsername == 1:
                 eq.execute(""" INSERT INTO users (user, hp, cash, level, xp, gun1, gun2, gun3, gun4, potion1, potion2, potion3, potion4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); """, (username, 100, 0, 0, 0, "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"))
                 eql.commit()
+                os.system('cls')
                 intro()
                 break
             elif confirmUsername == 2:
+                os.system('cls')
                 newSave()
                 break
             else:
@@ -222,6 +196,7 @@ def loadSave():
         x = x + 1
 
     if x == 0:
+        os.system('cls')
         input("There are no saves!")
         startUp()
     else:
@@ -232,21 +207,23 @@ def loadSave():
                 continue
             else:
                 if choice == 1:
+                    os.system('cls')
                     username = result[choice-1]
-                    input(username)
                     break
                 elif choice == 2 and x > 1:
+                    os.system('cls')
                     username = result[choice-1]
-                    input(username)
                     break
                 elif choice == 2 and x < 2:
+                    os.system('cls')
                     input("No data found")
                     continue
                 elif choice == 3 and x > 2:
+                    os.system('cls')
                     username = result[choice-1]
-                    input(username)
                     break
                 elif choice == 3 and x < 3:
+                    os.system('cls')
                     input("No data found")
                 else:
                     startUp()
@@ -258,9 +235,11 @@ def loadSave():
                 continue
             else:
                 if confirmChoice == 1:
+                    os.system('cls')
                     intro()
                     break
                 elif confirmChoice ==2:
+                    os.system('cls')
                     loadSave()
                     break
                 else:
@@ -278,12 +257,15 @@ def startUp():
             continue
         else:
             if choice == 1:
+                os.system('cls')
                 newSave()
                 break
             elif choice == 2:
+                os.system('cls')
                 loadSave()
                 break
             elif choice ==3:
+                os.system('cls')
                 deleteSave()
                 break
             else:
