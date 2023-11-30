@@ -12,7 +12,7 @@ eq = eql.cursor()
 # [[Rifles], [SMG], [Snipers], [HandGuns]]
 starterWeapons = [["AK-47", "AR-15"], ["M1911"]]
 
-weaponsI = [["M16"], ["G17"]]
+weaponsI = [["M16"], ["UZI"] ["G17"]]
 weaponsII = [["Beretta M9"]]
 weaponsIII = [["AUG-A3"], ["Barrett"]]
 
