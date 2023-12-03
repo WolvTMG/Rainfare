@@ -65,7 +65,7 @@ def main():
                             cash, xp = rewards(1)
 
                             eq.execute("SELECT cash FROM users WHERE user = ?;", (username))
-                            eq.execute("SeLECT xp FROM users WHERE user = ?;", (username))
+                            eq.execute("SELECT xp FROM users WHERE user = ?;", (username))
 
                             result = eq.fetchone()
                             result2 = eq.fetchone()
@@ -76,7 +76,7 @@ def main():
                             cashReward = result[0] + cash 
                             input(cashReward)
 
-                            eq.execute("UPDATE users SET gun1 = 'M1911' WHERE user = ?;""", (username))
+                            eq.execute("UPDATE users SET cash = ? WHERE user = ?;""", (cashReward, username))
 
                             input(f"You have gained {cash} cash and {xp} xp")
                             break
