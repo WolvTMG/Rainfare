@@ -13,7 +13,7 @@ eq = eql.cursor()
 def clear():
     system = os.name
     if system == 'nt':
-        clear()
+        os.system('cls')
     elif system == 'posix':
         os.system('clear')
     else:
