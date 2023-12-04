@@ -34,7 +34,7 @@ def main():
         eq.execute(""" SELECT gun1, gun2, gun3, gun4 FROM users WHERE user = ?; """, (username))
         result = eq.fetchall()
         x = 0
-        print(result)
+
         for i in result:
             x = x + 1
 
@@ -55,7 +55,6 @@ def main():
                         if result[0][0] != 'N/A':
                             
                             timex = random.randrange(5, 15)
-                            print(timex)
 
                             for i in range(timex):
                                 time.sleep(1)
@@ -74,7 +73,9 @@ def main():
                             print(result[0])
 
                             cashReward = result[0] + cash 
+
                             input(cashReward)
+                            input(timex)
 
                             eq.execute("UPDATE users SET cash = ? WHERE user = ?;""", (cashReward, username))
 
