@@ -31,6 +31,11 @@ def main():
 
     def explore():
 
+        global username
+        
+        input(username)
+        input(username[0])
+
         eq.execute(""" SELECT gun1, gun2, gun3, gun4 FROM users WHERE user = ?; """, (username))
         result = eq.fetchall()
         x = 0
@@ -42,6 +47,7 @@ def main():
             input("You have no guns!")
             menu()
         else:
+            print(result)
             while True:
                 try:
                     choice = int(input("Choose gun\n\nChoice: "))
@@ -64,23 +70,31 @@ def main():
                             cash, xp = rewards(1)
 
                             eq.execute("SELECT cash FROM users WHERE user = ?;", (username))
+                            result_cash = eq.fetchone()
+
                             eq.execute("SELECT xp FROM users WHERE user = ?;", (username))
+                            result_xp = eq.fetchone()
 
-                            result = eq.fetchone()
-                            result2 = eq.fetchone()
-
-                            print(result[0])
-                            print(result[0])
-
-                            cashReward = result[0] + cash 
+                            
+                            cashReward = result_cash[0] + cash 
+                            xpReward = result_xp[0] + xp
 
                             input(cashReward)
-                            input(timex)
+                            input(xpReward)
 
-                            eq.execute("UPDATE users SET cash = ? WHERE user = ?;""", (cashReward, username))
+                            time.sleep(2)
+
+                            username = username[0]
+
+                            eq.execute("UPDATE users SET cash = ?, xp = ? WHERE user = ?;", (cashReward, xpReward, username))
+                            eql.commit()
 
                             input(f"You have gained {cash} cash and {xp} xp")
-                            break
+
+                            menu()
+                            
+    def arcs():
+        print("WIP") 
 
     def rewards(x):
         if x == 1:
@@ -94,9 +108,11 @@ def main():
         print("WIP")
 
     def menu():
+        eq.execute(""" SELECT hp, xp, cash FROM users WHERE user = ?;""", (username))
+        hp = eq.fetchone()
         while True:
             try:
-                choice = int(input("(1) Explore | (2) View Bag | (3) Loot Crates | (4) Leave\n\nChoice: "))
+                choice = int(input(f"Character Info | Username: {username[0]} | HP: {hp[0]} | XP: {hp[1]} | Cash: {hp[2]}\n\n(1) Explore | (2) View Bag | (3) Loot Crates | (4) Leave\n\nChoice: "))
             except:
                 clear()
                 continue
@@ -180,7 +196,6 @@ def intro():
         eq.execute(""" SELECT hp FROM users WHERE user = ?;""", (username))
         hp = eq.fetchone()
 
-        input(f"Character Info:\n\nUsername: {username[0]}\nHP: {hp[0]}")
         clear()
         main()
 
@@ -231,6 +246,7 @@ def loadSave():
     global username
     eq.execute(""" SELECT user from users; """)
     result = eq.fetchall()
+
     x = 0
 
     for i in result:
