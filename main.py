@@ -132,6 +132,17 @@ def main():
                     clear()
                     continue
 
+    def levelChecker():
+        eq.execute(" SELECT xp FROM users WHERE user = ?;", (username))
+        xp = eq.fetchone()
+
+        for i in range(xp[0]):
+            if xp[0] < 99:
+                continue
+            else:
+                print(i)
+                
+
     menu()
                      
 
