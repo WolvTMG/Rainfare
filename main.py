@@ -9,7 +9,6 @@ global username
 eql = sqlite3.connect('data.db')
 eq = eql.cursor()
 
-
 def clear():
     system = os.name
     if system == 'nt':
@@ -32,9 +31,6 @@ def main():
     def explore():
 
         global username
-        
-        input(username)
-        input(username[0])
 
         eq.execute(""" SELECT gun1, gun2, gun3, gun4 FROM users WHERE user = ?; """, (username))
         result = eq.fetchall()
@@ -47,7 +43,6 @@ def main():
             input("You have no guns!")
             menu()
         else:
-            print(result)
             while True:
                 try:
                     choice = int(input("Choose gun\n\nChoice: "))
@@ -79,14 +74,9 @@ def main():
                             cashReward = result_cash[0] + cash 
                             xpReward = result_xp[0] + xp
 
-                            input(cashReward)
-                            input(xpReward)
+                            usernameT = username[0]
 
-                            time.sleep(2)
-
-                            username = username[0]
-
-                            eq.execute("UPDATE users SET cash = ?, xp = ? WHERE user = ?;", (cashReward, xpReward, username))
+                            eq.execute("UPDATE users SET cash = ?, xp = ? WHERE user = ?;", (cashReward, xpReward, usernameT))
                             eql.commit()
 
                             input(f"You have gained {cash} cash and {xp} xp")
@@ -105,7 +95,42 @@ def main():
         
 
     def lootCrates():
-        print("WIP")
+        eq.execute(""" SELECT cash FROM users WHERE user = ?;""", (username))
+        cash = eq.fetchone()
+
+        cash = cash[0]
+        print(cash)
+
+        while True:
+            try:
+                shop = int(input("Welcome to the Loot Crate shop! | (1) Browse | (2) Leave\n\nChoice: "))
+            except:
+                continue
+            else:
+                if shop == 1:
+                    menu()
+                    break
+                elif shop == 2:
+                    break
+                else:
+                    continue
+
+        while True:
+            try:
+                catalog = int(input("(1) 50$ Loot Crate | (2) 100$ Loot Crate | (3) 500$ Loot Crate | (4) 1,200$ Loot Crate | (5) Exit\n\nChoice: "))
+            except:
+                continue
+            else:
+                if catalog == 1 and cash > 49:
+                    cash = cash - 50
+                elif catalog == 2 and cash > 99:
+                    cash = cash - 100
+                elif catalog == 3 and cash > 499:
+                    cash = cash - 500
+                elif catalog == 4 and cash > 1199:
+                    cash = cash - 1200
+                elif catalog == 5:
+                    lootCrates()
 
     def menu():
         eq.execute(""" SELECT hp, xp, cash FROM users WHERE user = ?;""", (username))
@@ -141,13 +166,9 @@ def main():
                 continue
             else:
                 print(i)
-                
 
     menu()
                      
-
-
-
 def starterWeaponChoice():
     while True:
         try:
@@ -209,9 +230,6 @@ def intro():
 
         clear()
         main()
-
-
-
 
 def newSave():
     eq.execute(""" SELECT user from users; """)
