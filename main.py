@@ -45,9 +45,9 @@ def clear():
 # [[Rifles], [SMG], [Snipers], [HandGuns]]
 starterWeapons = [["AK-47", "AR-15"], ["M1911"]]
 
-weaponsI = [["M16"], ["UZI"], ["G17"]]
-weaponsII = [["Beretta M9"]]
-weaponsIII = [["AUG-A3"], ["Barrett .50"]]
+weaponsI = [["M16"], ["UZI", "MP40"], ["G-17"]]
+weaponsII = [["Beretta M9"], ["Dragunov"], ["G-19"]]
+weaponsIII = [["AUG-A3" "M27"], ["Barrett .50"]]
 
 def main():
 
@@ -114,8 +114,84 @@ def main():
             xp = random.randrange(10, 20)
 
         return cash, xp
-        
+    
+    def openCrate1():
+        eq.execute(""" SELECT key1, gun1, gun2, gun3, gun4 FROM users WHERE user = ?;""", (username,))
+        result = eq.fetchone()
 
+        if result[0] > 0:
+            clear()
+
+            i = 0
+            while i < 2:
+                i = i + 1
+                print("Opening crate")
+                time.sleep(0.5)
+                clear()
+                print("Opening crate.")
+                time.sleep(0.5)
+                clear()
+                print("Opening crate..")
+                time.sleep(0.5)
+                clear()
+                print("Opening crate...")
+                time.sleep(0.5)
+                clear()
+
+            crate_items = ["M16", "UZI", "G-17", "MP40"]
+            item = random.choice(crate_items)
+
+            if result[1] != "N/A":
+                slot1 = "Taken"
+            else:
+                slot1 = "Vacant"
+
+            if result[2] != "N/A":
+                slot2 = "Taken"
+            else:
+                slot2 = "Vacant"
+
+            if result[3] != "N/A":
+                slot3 = "Taken"
+            else:
+                slot3 = "Vacant"
+
+            if result[4] != "N/A":
+                slot4 = "Taken"
+            else:
+                slot4 = "Vacant" 
+
+            if slot1 == "Taken" and slot2 == "Taken" and slot3 == "Taken" and slot4 == "Taken":
+                FullInventory = True
+            else:
+                unlocked = True
+
+        while unlocked is True:
+            try:
+                option = int(input(f"Congratulations! You won the {item}!\n\nWhere would you like to put it?\n\n(1) Gun 1 | (2) Gun 2 | (3) Gun 3 | (4) Gun 4 | (5) Discard\n\nChoice: "))
+            except:
+                clear()
+                continue
+            else:
+                if option == 1 and slot1 != "Taken":
+                    print(f"{item} is now equipped to Slot 1!")
+                elif option == 1 and slot1 != "Vacant":
+                    print("Slot occupied")
+
+                elif option == 2 and slot2 != "Taken":
+                    print(f"{item} is now equipped to Slot 2!")
+                elif option == 2 and slot2 != "Vacant":
+                    print("Slot occupied")
+
+                elif option == 3 and slot3 != "Taken":
+                    print(f"{item} is now equipped to Slot 3!")
+                elif option == 3 and slot3 != "Vacant":
+                    print("Slot occupied")
+
+
+                
+
+        
     def lootCrates():
         eq.execute(""" SELECT cash, key1, key2, key3, key4 FROM users WHERE user = ?;""", (username,))
         result = eq.fetchone()
@@ -132,20 +208,26 @@ def main():
         print(lootCrate1)
 
         while True:
+            shopOpen = False
+            openOpen = False
             try:
-                shop = int(input("Welcome to the Loot Crate shop! | (1) Browse | (2) Leave\n\nChoice: "))
+                shop = int(input("Welcome to the Loot Crate shop! | (1) Browse | (2) Open | (3) Leave\n\nChoice: "))
             except:
                 continue
             else:
                 if shop == 1:
+                    shopOpen = True
                     break
                 elif shop == 2:
+                    openOpen = True
+                    break
+                elif shop == 3:
                     menu()
                     break
                 else:
                     continue
 
-        while True:
+        while shopOpen is True:
             clear()
             try:
                 catalog = int(input("(1) 50$ Loot Crate | (2) 100$ Loot Crate | (3) 500$ Loot Crate | (4) 1,200$ Loot Crate | (5) Exit\n\nChoice: "))
@@ -154,17 +236,41 @@ def main():
             else:
                 if catalog == 1 and cash > 49:
                     cash = cash - 50
-    
+                    lootCrate1 = lootCrate1 + 1
+                    
+                    eq.execute("UPDATE users SET key1 = ?, cash = ? WHERE user = ?;", (lootCrate1, cash, username))
+                    eql.commit()
+
                 elif catalog == 2 and cash > 99:
                     cash = cash - 100
+                    lootCrate2 = lootCrate2 + 1
+
                 elif catalog == 3 and cash > 499:
                     cash = cash - 500
+                    lootCrate3 = lootCrate3 + 1
+
                 elif catalog == 4 and cash > 1199:
                     cash = cash - 1200
+                    lootCrate4 = lootCrate4 + 1
+
                 elif catalog == 5:
                     lootCrates()
                 else:
                     print("Pooron")
+
+        while openOpen is True:
+            clear()
+            print(f"Loot Crate 1: {lootCrate1}\nLoot Crate 2: {lootCrate2}\nLoot Crate 3: {lootCrate3}\nLoot Crate 4: {lootCrate4}\n")
+            try:
+                openOption = int(input("(1) Open Crate 1 | (2) Open Crate 2 | (3) Open Crate 3 | (4) Open Crate 4 | (5) Exit\n\nChoice: "))
+            except:
+                clear()
+                continue
+            else:
+                if openOption == 1:
+                    clear()
+                    openCrate1()
+    
 
     def bag():
         eq.execute(""" SELECT hp, xp, cash, gun1, gun2, gun3, gun4, key1, key2, key3, key4 FROM users WHERE user = ?;""", (username,))
@@ -291,7 +397,6 @@ def newSave():
             continue
 
     input(f"Welcome, {username}")
-    username = username[0]
 
     while True:
         try:
@@ -367,7 +472,7 @@ def loadSave():
                 continue
             else:
                 if confirmChoice == 1:
-                    input(username)
+                    username = username[0]
                     clear()
                     intro()
                     break
