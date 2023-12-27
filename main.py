@@ -74,11 +74,16 @@ def main():
                     clear()
                     continue
                 else:
-                    if choice == 1:
+                    weapon = result[0][choice-1]
+
+                    if weapon != 'N/A':
+
+                        ammo = ammoChecker(weapon)
+
+                        input(ammo)
+
+                        if ammo == "True":
                         
-                        print(result[0][0])
-                        if result[0][0] != 'N/A':
-                            
                             timex = random.randrange(5, 15)
 
                             for i in range(timex):
@@ -104,6 +109,11 @@ def main():
                             input(f"You have gained {cash} cash and {xp} xp")
 
                             menu()
+
+                        else:
+                            print("No ammo")
+                            time.sleep(2)
+                            menu()
                             
     def arcs():
         print("WIP") 
@@ -114,6 +124,18 @@ def main():
             xp = random.randrange(10, 20)
 
         return cash, xp
+    
+    def ammoChecker(x):
+        eq.execute(" SELECT p_ammo FROM users WHERE user = ?;""", (username,))
+        result = eq.fetchone()
+        if x in ["M1911"]:
+            if result[0] < 1:
+                pistol_ammo = False
+            else:
+                pistol_ammo = True
+
+        return pistol_ammo
+            
     
     def openCrate1():
         eq.execute(""" SELECT key1, gun1, gun2, gun3, gun4 FROM users WHERE user = ?;""", (username,))
