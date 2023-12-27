@@ -174,17 +174,24 @@ def main():
                 continue
             else:
                 if option == 1 and slot1 != "Taken":
-                    print(f"{item} is now equipped to Slot 1!")
+                    eq.execute("UPDATE users SET gun1 = ? WHERE user = ?;", (item, username))
+                    eql.commit()
+                    input(f"{item} is now equipped to Slot 1!")
+                    unlocked = False
                 elif option == 1 and slot1 != "Vacant":
                     print("Slot occupied")
 
                 elif option == 2 and slot2 != "Taken":
-                    print(f"{item} is now equipped to Slot 2!")
+                    eq.execute("UPDATE users SET gun2 = ? WHERE user = ?;", (item, username))
+                    eql.commit()
+                    input(f"{item} is now equipped to Slot 2!")
                 elif option == 2 and slot2 != "Vacant":
                     print("Slot occupied")
 
                 elif option == 3 and slot3 != "Taken":
-                    print(f"{item} is now equipped to Slot 3!")
+                    eq.execute("UPDATE users SET gun3 = ? WHERE user = ?;", (item, username))
+                    eql.commit()
+                    input(f"{item} is now equipped to Slot 3!")
                 elif option == 3 and slot3 != "Vacant":
                     print("Slot occupied")
 

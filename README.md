@@ -6,8 +6,10 @@ Ensure all these dependencies are installed (Should be all built-in apart from s
 * random
 * sqlite3
 
-Ensure the data.db file is in the same folder as main.py
+Ensure the data.db file is in the same directory as main.py
 
 (Ignore plan.txt, it's just a text file displaying the plan for the DB)
+
+(This is a hardcore game btw, once you die, your save gets deleted)
 
 Enjoy!
