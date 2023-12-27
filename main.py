@@ -79,10 +79,8 @@ def main():
                     if weapon != 'N/A':
 
                         ammo = ammoChecker(weapon)
-
-                        input(ammo)
-
-                        if ammo == "True":
+                        
+                        if ammo == True:
                         
                             timex = random.randrange(5, 15)
 
@@ -126,7 +124,7 @@ def main():
         return cash, xp
     
     def ammoChecker(x):
-        eq.execute(" SELECT p_ammo FROM users WHERE user = ?;""", (username,))
+        eq.execute(" SELECT p_ammo, r_ammo FROM users WHERE user = ?;""", (username,))
         result = eq.fetchone()
         if x in ["M1911"]:
             if result[0] < 1:
@@ -134,8 +132,15 @@ def main():
             else:
                 pistol_ammo = True
 
-        return pistol_ammo
+            return pistol_ammo
             
+        if x in ["MP40", "AK-47", "AR-15"]:
+            if result[1] < 1:
+                rifle_ammo = False
+            else:
+                rifle_ammo = True
+
+            return rifle_ammo
     
     def openCrate1():
         eq.execute(""" SELECT key1, gun1, gun2, gun3, gun4 FROM users WHERE user = ?;""", (username,))
@@ -147,9 +152,6 @@ def main():
             i = 0
             while i < 2:
                 i = i + 1
-                print("Opening crate")
-                time.sleep(0.5)
-                clear()
                 print("Opening crate.")
                 time.sleep(0.5)
                 clear()
@@ -435,7 +437,7 @@ def newSave():
             continue
         else:
             if confirmUsername == 1:
-                eq.execute(""" INSERT INTO users (user, hp, cash, level, xp, gun1, gun2, gun3, gun4, potion1, potion2, potion3, potion4, key1, key2, key3, key4, r_ammo, s_ammo, p_ammo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); """, (username, 100, 0, 0, 0, "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", 0, 0, 0, 0, 0, 0 ,0))
+                eq.execute(""" INSERT INTO users (user, hp, cash, level, xp, gun1, gun2, gun3, gun4, potion1, potion2, potion3, potion4, key1, key2, key3, key4, r_ammo, s_ammo, p_ammo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); """, (username, 100, 0, 0, 0, "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", 0, 0, 0, 0, 30, 30, 30))
                 eql.commit()
                 clear()
                 intro()
